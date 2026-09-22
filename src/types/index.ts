@@ -8,8 +8,8 @@ export interface IApi {
     get<T extends object>(uri: string): Promise<T>;
     post<T extends object>(
         uri: string,
-         data: object,
-          method?: ApiPostMethods): Promise<T>;
+        data: object,
+        method?: ApiPostMethods): Promise<T>;
 }
 
 export interface IProduct {
@@ -22,7 +22,7 @@ export interface IProduct {
 }
 
 export interface IBuyer {
-    payment: TPayment;
+    payment: TPayment | null;
     email: string;
     phone: string;
     address: string;

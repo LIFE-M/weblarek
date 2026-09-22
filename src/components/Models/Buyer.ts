@@ -1,7 +1,12 @@
-import { IBuyer, TBuyerErrors } from '../../../types';
+import { IBuyer, TBuyerErrors } from '../../types';
 
 export class Buyer {
-    private data: Partial<IBuyer> = {};
+    private data: IBuyer = {
+        payment: null,
+        email: '',
+        phone: '',
+        address: ''
+    };
 
     setData(data: Partial<IBuyer>): void {
         this.data = {
@@ -11,11 +16,16 @@ export class Buyer {
     }
 
     getData(): IBuyer {
-        return this.data as IBuyer;
+        return this.data;
     }
 
     clear(): void {
-        this.data = {};
+        this.data = {
+            payment: null,
+            email: '',
+            phone: '',
+            address: ''
+        };
     }
 
     validate(): TBuyerErrors {
