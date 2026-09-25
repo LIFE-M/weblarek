@@ -1,9 +1,5 @@
-import { TCardBasket } from '../../types';
+import { TCardBasket, ICardBasketActions } from '../../types';
 import { Card } from './Card';
-
-interface ICardBasketActions {
-    onDelete: () => void;
-}
 
 export class CardBasket extends Card<TCardBasket> {
     private indexElement: HTMLElement;

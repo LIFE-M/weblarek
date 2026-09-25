@@ -1,12 +1,5 @@
+import { IHeader, IHeaderActions } from '../../types';
 import { Component } from '../base/Component';
-
-interface IHeader {
-    counter: number;
-}
-
-interface IHeaderActions {
-    onBasketClick: () => void;
-}
 
 export class Header extends Component<IHeader> {
     private counterElement: HTMLElement;

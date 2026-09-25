@@ -1,9 +1,5 @@
-import { IBasketView } from '../../types';
+import { IBasketView, IBasketViewActions } from '../../types';
 import { Component } from '../base/Component';
-
-interface IBasketViewActions {
-    onClick: () => void;
-}
 
 export class BasketView extends Component<IBasketView> {
     private listElement: HTMLElement;

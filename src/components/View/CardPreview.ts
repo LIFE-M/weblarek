@@ -1,10 +1,6 @@
-import { TCardPreview } from '../../types';
+import { TCardPreview, ICardPreviewActions } from '../../types';
 import { CDN_URL, categoryMap } from '../../utils/constants';
 import { Card } from './Card';
-
-interface ICardPreviewActions {
-    onClick: () => void;
-}
 
 export class CardPreview extends Card<TCardPreview> {
     private categoryElement: HTMLElement;

@@ -99,3 +99,35 @@ export interface ISuccess {
 export interface ISuccessActions {
     onClose: () => void;
 }
+
+export interface IHeader {
+    counter: number;
+}
+
+export interface IHeaderActions {
+    onBasketClick: () => void;
+}
+
+export interface IGallery {
+    catalog: HTMLElement[];
+}
+
+export interface ICardCatalogActions {
+    onClick: () => void;
+}
+
+export interface ICardPreviewActions {
+    onClick: () => void;
+}
+
+export interface ICardBasketActions {
+    onDelete: () => void;
+}
+
+export interface IBasketViewActions {
+    onClick: () => void;
+}
+
+export interface IModalActions {
+    onClose: () => void;
+}

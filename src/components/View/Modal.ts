@@ -1,9 +1,5 @@
-import { IModalData } from '../../types';
+import { IModalData, IModalActions } from '../../types';
 import { Component } from '../base/Component';
-
-interface IModalActions {
-    onClose: () => void;
-}
 
 export class Modal extends Component<IModalData> {
     private contentElement: HTMLElement;

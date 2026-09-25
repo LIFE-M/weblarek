@@ -1,9 +1,6 @@
 import { CDN_URL, categoryMap } from '../../utils/constants';
 import { Card } from './Card';
-
-interface ICardCatalogActions {
-    onClick: () => void;
-}
+import { ICardCatalogActions } from '../../types';
 
 export class CardCatalog extends Card {
     protected categoryElement: HTMLElement;
