@@ -1,5 +1,6 @@
 import { ISuccess, ISuccessActions } from '../../types';
 import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
 
 export class Success extends Component<ISuccess> {
     private descriptionElement: HTMLElement;
@@ -11,18 +12,15 @@ export class Success extends Component<ISuccess> {
     ) {
         super(container);
 
-        const descriptionElement =
-            container.querySelector<HTMLElement>('.order-success__description');
+        this.descriptionElement = ensureElement<HTMLElement>(
+            '.order-success__description',
+            container
+        );
 
-        const closeButton =
-            container.querySelector<HTMLButtonElement>('.order-success__close');
-
-        if (!descriptionElement || !closeButton) {
-            throw new Error('Окно не найдено');
-        }
-
-        this.descriptionElement = descriptionElement;
-        this.closeButton = closeButton;
+        this.closeButton = ensureElement<HTMLButtonElement>(
+            '.order-success__close',
+            container
+        );
 
         this.closeButton.addEventListener('click', actions.onClose);
     }

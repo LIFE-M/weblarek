@@ -257,12 +257,11 @@ set title(value: string): void - Устанавливает название т�
 
 set price(value: number | null): void - Устанавливает цену товара.
 
+#### Класс CardProduct
 
-#### Класс CardCatalog
+Промежуточный базовый класс для карточек товара. Наследуется от Card и содержит общую логику отображения категории и изображения.
 
-Отображает карточку товара в каталоге. Наследуется от Card.
-
-Конструктор принимает HTMLElement и ICardCatalogActions.
+Конструктор принимает HTMLElement.
 
 Поля
 
@@ -276,28 +275,25 @@ set category(value: string): void - Устанавливает категори�
 
 set image(value: string): void - Устанавливает изображение товара.
 
+#### Класс CardCatalog
+
+Отображает карточку товара в каталоге. Наследуется от CardProduct.
+
+Конструктор принимает HTMLElement и ICardCatalogActions.
 
 #### Класс CardPreview
 
-Отображает подробную информацию о товаре. Наследуется от Card.
+Отображает подробную информацию о товаре. Наследуется от CardProduct.
 
 Конструктор принимает HTMLElement и ICardPreviewActions.
 
 Поля
-
-private categoryElement: HTMLElement - Категория товара.
-
-private imageElement: HTMLImageElement - Изображение товара.
 
 private descriptionElement: HTMLElement - Описание товара.
 
 private buttonElement: HTMLButtonElement - Кнопка действия.
 
 Методы
-
-set category(value: string): void - Устанавливает категорию товара.
-
-set image(value: string): void - Устанавливает изображение товара.
 
 set description(value: string): void - Устанавливает описание товара.
 
@@ -350,7 +346,7 @@ set buttonDisabled(value: boolean): void - Блокирует кнопку оф�
 
 Отвечает за отображение модального окна.
 
-Конструктор принимает HTMLElement и IModalActions.
+Конструктор принимает HTMLElement.
 
 Поля
 
@@ -369,9 +365,9 @@ close(): void - Закрывает модальное окно.
 
 #### Класс Form
 
-Базовый класс для форм. Управляет состоянием кнопки отправки и отображением ошибок.
+Базовый класс для форм. Управляет состоянием кнопки отправки и отображением ошибок и отправку формы.
 
-Конструктор принимает HTMLFormElement.
+Конструктор принимает HTMLFormElement и IFormActions.
 
 Поля
 
@@ -466,7 +462,5 @@ order:submit - Переход к форме контактных данных.
 form:change - Изменение данных в формах.
 
 contacts:submit - Отправка заказа на сервер.
-
-modal:close - Закрытие модального окна.
 
 success:close - Закрытие окна успешного заказа.

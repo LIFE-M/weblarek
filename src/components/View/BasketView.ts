@@ -1,5 +1,6 @@
 import { IBasketView, IBasketViewActions } from '../../types';
 import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
 
 export class BasketView extends Component<IBasketView> {
     private listElement: HTMLElement;
@@ -12,22 +13,20 @@ export class BasketView extends Component<IBasketView> {
     ) {
         super(container);
 
-        const listElement =
-            container.querySelector<HTMLElement>('.basket__list');
+        this.listElement = ensureElement<HTMLElement>(
+            '.basket__list',
+            container
+        );
 
-        const priceElement =
-            container.querySelector<HTMLElement>('.basket__price');
+        this.priceElement = ensureElement<HTMLElement>(
+            '.basket__price',
+            container
+        );
 
-        const buttonElement =
-            container.querySelector<HTMLButtonElement>('.basket__button');
-
-        if (!listElement || !priceElement || !buttonElement) {
-            throw new Error('Корзина не найдена');
-        }
-
-        this.listElement = listElement;
-        this.priceElement = priceElement;
-        this.buttonElement = buttonElement;
+        this.buttonElement = ensureElement<HTMLButtonElement>(
+            '.basket__button',
+            container
+        );
 
         this.buttonElement.addEventListener('click', actions.onClick);
     }

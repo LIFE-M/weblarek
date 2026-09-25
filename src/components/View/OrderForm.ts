@@ -2,6 +2,10 @@ import {
     IOrderFormActions, TOrderForm, TPayment
 } from '../../types';
 import { Form } from './Form';
+import {
+    ensureAllElements,
+    ensureElement
+} from '../../utils/utils';
 
 export class OrderForm extends Form<TOrderForm> {
     private paymentButtons: HTMLButtonElement[];
@@ -11,22 +15,19 @@ export class OrderForm extends Form<TOrderForm> {
         container: HTMLFormElement,
         actions: IOrderFormActions
     ) {
-        super(container);
+        super(container, actions);
 
-        this.paymentButtons = Array.from(
-            container.querySelectorAll<HTMLButtonElement>('.button_alt')
+        this.paymentButtons = ensureAllElements<HTMLButtonElement>(
+            '.button_alt',
+            container
         );
 
-        const addressInput =
-            container.querySelector<HTMLInputElement>('input[name="address"]');
+        this.addressInput = ensureElement<HTMLInputElement>(
+            'input[name="address"]',
+            container
+        );
 
-        if (!addressInput) {
-            throw new Error('Адрес не найден');
-        }
-
-        this.addressInput = addressInput;
-
-        this.paymentButtons.forEach(button => {
+        this.paymentButtons.forEach((button) => {
             button.addEventListener('click', () => {
                 actions.onPayment(button.name as TPayment);
             });
@@ -34,11 +35,6 @@ export class OrderForm extends Form<TOrderForm> {
 
         this.addressInput.addEventListener('input', () => {
             actions.onInput(this.addressInput.value);
-        });
-
-        container.addEventListener('submit', (event) => {
-            event.preventDefault();
-            actions.onSubmit();
         });
     }
 

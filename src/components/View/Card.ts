@@ -1,5 +1,6 @@
 import { IProduct } from '../../types';
 import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
 
 export abstract class Card<T extends IProduct = IProduct> extends Component<T> {
     protected titleElement: HTMLElement;
@@ -8,15 +9,15 @@ export abstract class Card<T extends IProduct = IProduct> extends Component<T> {
     constructor(container: HTMLElement) {
         super(container);
 
-        const titleElement = container.querySelector<HTMLElement>('.card__title');
-        const priceElement = container.querySelector<HTMLElement>('.card__price');
+        this.titleElement = ensureElement<HTMLElement>(
+            '.card__title',
+            container
+        );
 
-        if (!titleElement || !priceElement) {
-            throw new Error('Карточка не найдена');
-        }
-
-        this.titleElement = titleElement;
-        this.priceElement = priceElement;
+        this.priceElement = ensureElement<HTMLElement>(
+            '.card__price',
+            container
+        );
     }
 
     set title(value: string) {
@@ -25,6 +26,6 @@ export abstract class Card<T extends IProduct = IProduct> extends Component<T> {
 
     set price(value: number | null) {
         this.priceElement.textContent =
-            value === null ? '' : `${value} синапсов`;
+            value === null ? 'Бесценно' : `${value} синапсов`;
     }
 }

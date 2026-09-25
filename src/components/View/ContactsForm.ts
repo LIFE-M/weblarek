@@ -3,6 +3,7 @@ import {
     TContactsForm
 } from '../../types';
 import { Form } from './Form';
+import { ensureElement } from '../../utils/utils';
 
 export class ContactsForm extends Form<TContactsForm> {
     private emailInput: HTMLInputElement;
@@ -12,20 +13,17 @@ export class ContactsForm extends Form<TContactsForm> {
         container: HTMLFormElement,
         actions: IContactsFormActions
     ) {
-        super(container);
+        super(container, actions);
 
-        const emailInput =
-            container.querySelector<HTMLInputElement>('input[name="email"]');
+        this.emailInput = ensureElement<HTMLInputElement>(
+            'input[name="email"]',
+            container
+        );
 
-        const phoneInput =
-            container.querySelector<HTMLInputElement>('input[name="phone"]');
-
-        if (!emailInput || !phoneInput) {
-            throw new Error('Контакты не найдены');
-        }
-
-        this.emailInput = emailInput;
-        this.phoneInput = phoneInput;
+        this.phoneInput = ensureElement<HTMLInputElement>(
+            'input[name="phone"]',
+            container
+        );
 
         this.emailInput.addEventListener('input', () => {
             actions.onInput('email', this.emailInput.value);
@@ -33,11 +31,6 @@ export class ContactsForm extends Form<TContactsForm> {
 
         this.phoneInput.addEventListener('input', () => {
             actions.onInput('phone', this.phoneInput.value);
-        });
-
-        container.addEventListener('submit', (event) => {
-            event.preventDefault();
-            actions.onSubmit();
         });
     }
 

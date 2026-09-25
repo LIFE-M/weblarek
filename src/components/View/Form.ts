@@ -1,25 +1,30 @@
-import { IFormState } from '../../types';
+import { IFormActions, IFormState } from '../../types';
 import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
 
 export abstract class Form<T extends IFormState> extends Component<T> {
     protected submitButton: HTMLButtonElement;
     protected errorsElement: HTMLElement;
 
-    constructor(container: HTMLFormElement) {
+    constructor(
+        container: HTMLFormElement,
+        actions: IFormActions
+    ) {
         super(container);
 
-        const submitButton =
-            container.querySelector<HTMLButtonElement>('button[type="submit"]');
+        this.submitButton = ensureElement<HTMLButtonElement>(
+            'button[type="submit"]',
+            container
+        );
 
-        const errorsElement =
-            container.querySelector<HTMLElement>('.form__errors');
-
-        if (!submitButton || !errorsElement) {
-            throw new Error('Форма не найдена');
-        }
-
-        this.submitButton = submitButton;
-        this.errorsElement = errorsElement;
+        this.errorsElement = ensureElement<HTMLElement>(
+            '.form__errors',
+            container
+        );
+        container.addEventListener('submit', (event) => {
+        event.preventDefault();
+        actions.onSubmit();
+        });
     }
 
     set valid(value: boolean) {

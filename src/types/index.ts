@@ -81,15 +81,26 @@ export interface IFormState {
     errors: string;
 }
 
-export interface IOrderFormActions {
-    onPayment: (payment: TPayment) => void;
-    onInput: (address: string) => void;
+export interface IFormActions {
     onSubmit: () => void;
 }
 
-export interface IContactsFormActions {
+export interface IOrderFormActions extends IFormActions {
+    onPayment: (payment: TPayment) => void;
+    onInput: (address: string) => void;
+}
+
+export interface IContactsFormActions extends IFormActions {
     onInput: (field: 'email' | 'phone', value: string) => void;
-    onSubmit: () => void;
+}
+
+export interface IFormChangeEvent {
+    field: keyof IBuyer;
+    value: string;
+}
+
+export interface IProductEvent {
+    id: string;
 }
 
 export interface ISuccess {
@@ -126,8 +137,4 @@ export interface ICardBasketActions {
 
 export interface IBasketViewActions {
     onClick: () => void;
-}
-
-export interface IModalActions {
-    onClose: () => void;
 }

@@ -1,5 +1,6 @@
 import { TCardBasket, ICardBasketActions } from '../../types';
 import { Card } from './Card';
+import { ensureElement } from '../../utils/utils';
 
 export class CardBasket extends Card<TCardBasket> {
     private indexElement: HTMLElement;
@@ -11,18 +12,15 @@ export class CardBasket extends Card<TCardBasket> {
     ) {
         super(container);
 
-        const indexElement =
-            container.querySelector<HTMLElement>('.basket__item-index');
+        this.indexElement = ensureElement<HTMLElement>(
+            '.basket__item-index',
+            container
+        );
 
-        const deleteButton =
-            container.querySelector<HTMLButtonElement>('.basket__item-delete');
-
-        if (!indexElement || !deleteButton) {
-            throw new Error('Карточка не найдена');
-        }
-
-        this.indexElement = indexElement;
-        this.deleteButton = deleteButton;
+        this.deleteButton = ensureElement<HTMLButtonElement>(
+            '.basket__item-delete',
+            container
+        );
 
         this.deleteButton.addEventListener('click', actions.onDelete);
     }

@@ -4,7 +4,8 @@ import { Api } from './components/base/Api';
 import { EventEmitter } from './components/base/Events';
 import { API_URL } from './utils/constants';
 import { ApiRequest } from './components/ApiRequest';
-import { IOrderRequest, TPayment } from './types';
+import { IFormChangeEvent, IOrderRequest, IProductEvent, TPayment } from './types';
+import { cloneTemplate, ensureElement } from './utils/utils';
 
 import { Products } from './components/Models/Products';
 import { Basket } from './components/Models/Basket';
@@ -30,15 +31,22 @@ const buyer = new Buyer(events);
 const apiRequest = new ApiRequest(new Api(API_URL));
 
 const modal = new Modal(
-    getElement<HTMLElement>('#modal-container'),
-    { onClose: events.trigger('modal:close') }
+    ensureElement<HTMLElement>('#modal-container')
 );
 
-const header = new Header(document.body, {
-    onBasketClick: events.trigger('basket:open')
-});
+const header = new Header(ensureElement<HTMLElement>('.header'), {
+        onBasketClick: events.trigger('basket:open')
+    }
+);
 
-const gallery = new Gallery(getElement<HTMLElement>('.gallery'));
+const gallery = new Gallery(ensureElement<HTMLElement>('.gallery'));
+
+const cardPreview = new CardPreview(
+    cloneTemplate<HTMLElement>('#card-preview'),
+    {
+        onClick: events.trigger('product:toggle')
+    }
+);
 
 const basketView = new BasketView(
     cloneTemplate<HTMLElement>('#basket'),
@@ -76,26 +84,6 @@ const success = new Success(
     { onClose: events.trigger('success:close') }
 );
 
-function getElement<T extends Element>(selector: string): T {
-    const element = document.querySelector<T>(selector);
-
-    if (!element) {
-        throw new Error(`Не найден элемент ${selector}`);
-    }
-
-    return element;
-}
-
-function cloneTemplate<T extends Element>(selector: string): T {
-    const template = getElement<HTMLTemplateElement>(selector);
-    const element = template.content.firstElementChild?.cloneNode(true);
-
-    if (!(element instanceof Element)) {
-        throw new Error(`Шаблон не найден ${selector}`);
-    }
-
-    return element as T;
-}
 
 events.on('products:changed', () => {
     gallery.render({
@@ -132,18 +120,8 @@ events.on('product:selected', () => {
         buttonText = 'Удалить из корзины';
     }
 
-    const card = new CardPreview(
-        cloneTemplate<HTMLElement>('#card-preview'),
-        {
-            onClick: events.trigger(
-                'product:toggle',
-                { id: product.id }
-            )
-        }
-    );
-
     modal.render({
-        content: card.render({
+        content: cardPreview.render({
             ...product,
             buttonText,
             buttonDisabled: unavailable
@@ -198,7 +176,7 @@ events.on('buyer:changed', () => {
     });
 });
 
-events.on<{ id: string }>('card:select', ({ id }) => {
+events.on<IProductEvent>('card:select', ({ id }) => {
     const product = products.getItem(id);
 
     if (product) {
@@ -206,12 +184,11 @@ events.on<{ id: string }>('card:select', ({ id }) => {
     }
 });
 
-events.on<{ id: string }>('product:toggle', ({ id }) => {
-    const product = products.getItem(id);
+events.on('product:toggle', () => {
+    const product = products.getSelectedItem();
     if (!product || product.price === null) {
         return;
-    }
-    else if (basket.hasItem(id)) {
+    } else if (basket.hasItem(product.id)) {
         basket.removeItem(product);
     } else {
         basket.addItem(product);
@@ -219,7 +196,7 @@ events.on<{ id: string }>('product:toggle', ({ id }) => {
     modal.close();
 });
 
-events.on<{ id: string }>('basket:remove', ({ id }) => {
+events.on<IProductEvent>('basket:remove', ({ id }) => {
     const product = basket.getItems().find(
         (item) => item.id === id
     );
@@ -239,50 +216,18 @@ events.on('order:open', () => {
 });
 
 events.on('order:submit', () => {
-    const errors = buyer.validate();
-
-    if (!errors.payment && !errors.address) {
-        modal.render({ content: contactsForm.render() });
-    }
+    modal.render({ content: contactsForm.render() });
 });
 
-events.on<{
-    field: 'payment' | 'address' | 'email' | 'phone';
-    value: string;
-}>('form:change', ({ field, value }) => {
-    if (field === 'payment') {
-        buyer.setData({ payment: value as TPayment });
-    }
-
-    else if (field === 'address') {
-        buyer.setData({ address: value });
-    }
-
-    else if (field === 'email') {
-        buyer.setData({ email: value });
-    }
-
-    else if (field === 'phone') {
-        buyer.setData({ phone: value });
-    }
+events.on<IFormChangeEvent>('form:change', ({ field, value }) => {
+    buyer.setData({ [field]: value });
 });
 
 events.on('contacts:submit', async () => {
     const data = buyer.getData();
-    const errors = buyer.validate();
-
-    if (
-        errors.payment ||
-        errors.address ||
-        errors.email ||
-        errors.phone ||
-        !data.payment
-    ) {
-        return;
-    }
 
     const order: IOrderRequest = {
-        payment: data.payment,
+        payment: data.payment as TPayment,
         email: data.email,
         phone: data.phone,
         address: data.address,
@@ -306,8 +251,10 @@ events.on('contacts:submit', async () => {
     }
 });
 
-events.on('modal:close', () => modal.close());
 events.on('success:close', () => modal.close());
+
+buyer.clear();
+basket.clear();
 
 apiRequest.getProducts()
     .then((data) => {

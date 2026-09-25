@@ -1,34 +1,31 @@
-import { IModalData, IModalActions } from '../../types';
+import { IModalData } from '../../types';
 import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
 
 export class Modal extends Component<IModalData> {
     private contentElement: HTMLElement;
     private closeButton: HTMLButtonElement;
 
-    constructor(
-        container: HTMLElement,
-        actions: IModalActions
-    ) {
+    constructor(container: HTMLElement) {
         super(container);
 
-        const contentElement =
-            container.querySelector<HTMLElement>('.modal__content');
+        this.contentElement = ensureElement<HTMLElement>(
+            '.modal__content',
+            container
+        );
 
-        const closeButton =
-            container.querySelector<HTMLButtonElement>('.modal__close');
+        this.closeButton = ensureElement<HTMLButtonElement>(
+            '.modal__close',
+            container
+        );
 
-        if (!contentElement || !closeButton) {
-            throw new Error('Модалка не найдена');
-        }
+        this.closeButton.addEventListener('click', () => {
+            this.close();
+        });
 
-        this.contentElement = contentElement;
-        this.closeButton = closeButton;
-
-        this.closeButton.addEventListener('click', actions.onClose);
-
-        this.container.addEventListener('click', (event) => {
+        this.container.addEventListener('mousedown', (event) => {
             if (event.target === this.container) {
-                actions.onClose();
+                this.close();
             }
         });
     }

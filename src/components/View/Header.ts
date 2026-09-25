@@ -1,5 +1,6 @@
 import { IHeader, IHeaderActions } from '../../types';
 import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
 
 export class Header extends Component<IHeader> {
     private counterElement: HTMLElement;
@@ -11,20 +12,20 @@ export class Header extends Component<IHeader> {
     ) {
         super(container);
 
-        const counterElement =
-            container.querySelector<HTMLElement>('.header__basket-counter');
+        this.counterElement = ensureElement<HTMLElement>(
+            '.header__basket-counter',
+            container
+        );
 
-        const basketButton =
-            container.querySelector<HTMLButtonElement>('.header__basket');
+        this.basketButton = ensureElement<HTMLButtonElement>(
+            '.header__basket',
+            container
+        );
 
-        if (!counterElement || !basketButton) {
-            throw new Error('Шапка не найдена');
-        }
-
-        this.counterElement = counterElement;
-        this.basketButton = basketButton;
-
-        this.basketButton.addEventListener('click', actions.onBasketClick);
+        this.basketButton.addEventListener(
+            'click',
+            actions.onBasketClick
+        );
     }
 
     set counter(value: number) {
