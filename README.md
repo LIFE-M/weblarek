@@ -203,6 +203,7 @@ private api: IApi - Хранит экземпляр API.
 Методы
 
 getProducts(): Promise<IProductsResponse> - Выполняет get запрос.
+
 createOrder(order: IOrderRequest): Promise<IOrderResponse> - Выполняет post запрос и передает данные о покупателе и заказе.
 
 
@@ -220,6 +221,7 @@ createOrder(order: IOrderRequest): Promise<IOrderResponse> - Выполняет 
 Поля
 
 private counterElement: HTMLElement - Отображает количество товаров.
+
 private basketButton: HTMLButtonElement - Кнопка открытия корзины.
 
 Методы
@@ -246,11 +248,13 @@ set catalog(value: HTMLElement[]): void - Заменяет содержимое 
 Поля
 
 protected titleElement: HTMLElement - Элемент с названием товара.
+
 protected priceElement: HTMLElement - Элемент с ценой товара.
 
 Методы
 
 set title(value: string): void - Устанавливает название товара.
+
 set price(value: number | null): void - Устанавливает цену товара.
 
 
@@ -263,11 +267,13 @@ set price(value: number | null): void - Устанавливает цену то
 Поля
 
 protected categoryElement: HTMLElement - Категория товара.
+
 protected imageElement: HTMLImageElement - Изображение товара.
 
 Методы
 
 set category(value: string): void - Устанавливает категорию товара.
+
 set image(value: string): void - Устанавливает изображение товара.
 
 
@@ -280,16 +286,23 @@ set image(value: string): void - Устанавливает изображени
 Поля
 
 private categoryElement: HTMLElement - Категория товара.
+
 private imageElement: HTMLImageElement - Изображение товара.
+
 private descriptionElement: HTMLElement - Описание товара.
+
 private buttonElement: HTMLButtonElement - Кнопка действия.
 
 Методы
 
 set category(value: string): void - Устанавливает категорию товара.
+
 set image(value: string): void - Устанавливает изображение товара.
+
 set description(value: string): void - Устанавливает описание товара.
+
 set buttonText(value: string): void - Устанавливает текст кнопки.
+
 set buttonDisabled(value: boolean): void - Блокирует кнопку.
 
 
@@ -302,6 +315,7 @@ set buttonDisabled(value: boolean): void - Блокирует кнопку.
 Поля
 
 private indexElement: HTMLElement - Номер товара.
+
 private deleteButton: HTMLButtonElement - Кнопка удаления товара.
 
 Методы
@@ -318,13 +332,17 @@ set index(value: number): void - Устанавливает номер това�
 Поля
 
 private listElement: HTMLElement - Список товаров в корзине.
+
 private priceElement: HTMLElement - Отображает общую стоимость.
+
 private buttonElement: HTMLButtonElement - Кнопка оформления заказа.
 
 Методы
 
 set items(value: HTMLElement[]): void - Отображает карточки товаров в корзине.
+
 set total(value: number): void - Устанавливает общую стоимость товаров.
+
 set buttonDisabled(value: boolean): void - Блокирует кнопку оформления заказа.
 
 
@@ -337,12 +355,15 @@ set buttonDisabled(value: boolean): void - Блокирует кнопку оф�
 Поля
 
 private contentElement: HTMLElement - Содержимое модального окна.
+
 private closeButton: HTMLButtonElement - Кнопка закрытия модального окна.
 
 Методы
 
 set content(value: HTMLElement): void - Устанавливает содержимое модального окна.
+
 open(): void - Открывает модальное окно.
+
 close(): void - Закрывает модальное окно.
 
 
@@ -355,11 +376,13 @@ close(): void - Закрывает модальное окно.
 Поля
 
 protected submitButton: HTMLButtonElement - Кнопка отправки формы.
+
 protected errorsElement: HTMLElement - Поле отображения ошибок.
 
 Методы
 
 set valid(value: boolean): void - Активирует или блокирует кнопку отправки формы.
+
 set errors(value: string): void - Устанавливает текст ошибок.
 
 
@@ -372,11 +395,13 @@ set errors(value: string): void - Устанавливает текст ошиб
 Поля
 
 private paymentButtons: HTMLButtonElement[] - Кнопки выбора способа оплаты.
+
 private addressInput: HTMLInputElement - Поле ввода адреса.
 
 Методы
 
 set payment(value: TPayment | null): void - Отмечает выбранный способ оплаты.
+
 set address(value: string): void - Устанавливает адрес.
 
 
@@ -389,11 +414,13 @@ set address(value: string): void - Устанавливает адрес.
 Поля
 
 private emailInput: HTMLInputElement - Поле электронной почты.
+
 private phoneInput: HTMLInputElement - Поле телефона.
 
 Методы
 
 set email(value: string): void - Устанавливает электронную почту.
+
 set phone(value: string): void - Устанавливает телефон.
 
 
@@ -406,6 +433,7 @@ set phone(value: string): void - Устанавливает телефон.
 Поля
 
 private descriptionElement: HTMLElement - Отображает итоговую сумму.
+
 private closeButton: HTMLButtonElement - Кнопка закрытия.
 
 Методы
@@ -416,17 +444,29 @@ set total(value: number): void - Выводит итоговую сумму за
 ### События
 
 products:changed - Изменение каталога товаров.
+
 product:selected - Выбор товара для подробного просмотра.
+
 basket:changed - Изменение содержимого корзины.
+
 buyer:changed - Изменение данных покупателя.
 
 card:select - Выбор карточки товара в каталоге.
+
 product:toggle - Добавление товара в корзину или удаление товара из корзины из окна просмотра.
+
 basket:remove - Удаление товара из корзины.
+
 basket:open - Открытие корзины.
+
 order:open - Открытие формы оформления заказа.
+
 order:submit - Переход к форме контактных данных.
+
 form:change - Изменение данных в формах.
+
 contacts:submit - Отправка заказа на сервер.
+
 modal:close - Закрытие модального окна.
+
 success:close - Закрытие окна успешного заказа.
