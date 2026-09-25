@@ -211,7 +211,7 @@ events.on<{ id: string }>('product:toggle', ({ id }) => {
     if (!product || product.price === null) {
         return;
     }
-    if (basket.hasItem(id)) {
+    else if (basket.hasItem(id)) {
         basket.removeItem(product);
     } else {
         basket.addItem(product);
@@ -254,15 +254,15 @@ events.on<{
         buyer.setData({ payment: value as TPayment });
     }
 
-    if (field === 'address') {
+    else if (field === 'address') {
         buyer.setData({ address: value });
     }
 
-    if (field === 'email') {
+    else if (field === 'email') {
         buyer.setData({ email: value });
     }
 
-    if (field === 'phone') {
+    else if (field === 'phone') {
         buyer.setData({ phone: value });
     }
 });
