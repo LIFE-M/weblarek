@@ -91,7 +91,7 @@ function cloneTemplate<T extends Element>(selector: string): T {
     const element = template.content.firstElementChild?.cloneNode(true);
 
     if (!(element instanceof Element)) {
-        throw new Error(`Не удалось клонировать ${selector}`);
+        throw new Error(`Шаблон не найден ${selector}`);
     }
 
     return element as T;
