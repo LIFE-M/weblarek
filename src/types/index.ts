@@ -4,6 +4,25 @@ export type TPayment = 'card' | 'cash';
 
 export type TBuyerErrors = Partial<Record<keyof IBuyer, string>>;
 
+export type TCardPreview = IProduct & {
+    buttonText: string;
+    buttonDisabled: boolean;
+};
+
+export type TCardBasket = IProduct & {
+    index: number;
+};
+
+export type TOrderForm = IFormState & {
+    payment: TPayment | null;
+    address: string;
+};
+
+export type TContactsForm = IFormState & {
+    email: string;
+    phone: string;
+};
+
 export interface IApi {
     get<T extends object>(uri: string): Promise<T>;
     post<T extends object>(
@@ -45,4 +64,38 @@ export interface IOrderRequest {
 export interface IOrderResponse {
     id: string;
     total: number;
+}
+
+export interface IBasketView {
+    items: HTMLElement[];
+    total: number;
+    buttonDisabled: boolean;
+}
+
+export interface IModalData {
+    content: HTMLElement;
+}
+
+export interface IFormState {
+    valid: boolean;
+    errors: string;
+}
+
+export interface IOrderFormActions {
+    onPayment: (payment: TPayment) => void;
+    onInput: (address: string) => void;
+    onSubmit: () => void;
+}
+
+export interface IContactsFormActions {
+    onInput: (field: 'email' | 'phone', value: string) => void;
+    onSubmit: () => void;
+}
+
+export interface ISuccess {
+    total: number;
+}
+
+export interface ISuccessActions {
+    onClose: () => void;
 }

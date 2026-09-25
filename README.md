@@ -118,7 +118,7 @@ interface IProduct {
 Интерфейс IBuyer описывает данные покупателя, необходимые для оформления заказа.
 
 interface IBuyer {
-  payment: TPayment; способ оплаты.
+  payment: TPayment | null; способ оплаты.
   email: string; электронная почта покупателя.
   phone: string; номер телефона покупателя.
   address: string; адрес доставки.
@@ -131,7 +131,7 @@ interface IBuyer {
 
 Хранит доступные товары и товар выбранный для отображения.
 
-Конструктор не принимает параметры.
+Конструктор принимает IEvents.
 
 Поля
 
@@ -151,7 +151,7 @@ getSelectedItem(): IProduct | null - Возвращает товар, выбра
 
 Хранит товары, выбранные покупателем для покупки.
 
-Конструктор не принимает параметры.
+Конструктор принимает IEvents.
 
 Поля
 
@@ -172,11 +172,11 @@ hasItem(id: string): boolean - Проверяет наличие товара в
 
 Хранит данные покупателя для оформления заказа.
 
-Конструктор не принимает параметры.
+Конструктор принимает IEvents.
 
 Поля
 
-private data: Partial<IBuyer> - Хранит данные покупателя.
+private data: IBuyer - Хранит данные покупателя.
 
 Методы
 
@@ -204,3 +204,229 @@ private api: IApi - Хранит экземпляр API.
 
 getProducts(): Promise<IProductsResponse> - Выполняет get запрос.
 createOrder(order: IOrderRequest): Promise<IOrderResponse> - Выполняет post запрос и передает данные о покупателе и заказе.
+
+
+### Слой Представления
+
+Слой представления отвечает за отображение данных и обработку действий пользователя.
+
+
+#### Класс Header
+
+Отвечает за отображение шапки сайта, счётчика товаров и кнопку открытия корзины.
+
+Конструктор принимает HTMLElement и IHeaderActions.
+
+Поля
+
+private counterElement: HTMLElement - Отображает количество товаров.
+private basketButton: HTMLButtonElement - Кнопка открытия корзины.
+
+Методы
+
+set counter(value: number): void - Устанавливает значение счётчика.
+
+#### Класс Gallery
+
+Управляет отображением каталога товаров.
+
+Конструктор принимает HTMLElement.
+
+Методы
+
+set catalog(value: HTMLElement[]): void - Заменяет содержимое галереи массивом карточек товаров.
+
+
+#### Класс Card
+
+Базовый класс для карточек товаров. Содержит общую логику отображения названия и цены.
+
+Конструктор принимает HTMLElement.
+
+Поля
+
+protected titleElement: HTMLElement - Элемент с названием товара.
+protected priceElement: HTMLElement - Элемент с ценой товара.
+
+Методы
+
+set title(value: string): void - Устанавливает название товара.
+set price(value: number | null): void - Устанавливает цену товара.
+
+
+#### Класс CardCatalog
+
+Отображает карточку товара в каталоге. Наследуется от Card.
+
+Конструктор принимает HTMLElement и ICardCatalogActions.
+
+Поля
+
+protected categoryElement: HTMLElement - Категория товара.
+protected imageElement: HTMLImageElement - Изображение товара.
+
+Методы
+
+set category(value: string): void - Устанавливает категорию товара.
+set image(value: string): void - Устанавливает изображение товара.
+
+
+#### Класс CardPreview
+
+Отображает подробную информацию о товаре. Наследуется от Card.
+
+Конструктор принимает HTMLElement и ICardPreviewActions.
+
+Поля
+
+private categoryElement: HTMLElement - Категория товара.
+private imageElement: HTMLImageElement - Изображение товара.
+private descriptionElement: HTMLElement - Описание товара.
+private buttonElement: HTMLButtonElement - Кнопка действия.
+
+Методы
+
+set category(value: string): void - Устанавливает категорию товара.
+set image(value: string): void - Устанавливает изображение товара.
+set description(value: string): void - Устанавливает описание товара.
+set buttonText(value: string): void - Устанавливает текст кнопки.
+set buttonDisabled(value: boolean): void - Блокирует кнопку.
+
+
+#### Класс CardBasket
+
+Отображает товар в корзине и позволяет удалить его. Наследуется от Card.
+
+Конструктор принимает HTMLElement и ICardBasketActions.
+
+Поля
+
+private indexElement: HTMLElement - Номер товара.
+private deleteButton: HTMLButtonElement - Кнопка удаления товара.
+
+Методы
+
+set index(value: number): void - Устанавливает номер товара.
+
+
+#### Класс BasketView
+
+Отображает содержимое корзины, общую стоимость и кнопку оформления заказа.
+
+Конструктор принимает HTMLElement и IBasketViewActions.
+
+Поля
+
+private listElement: HTMLElement - Список товаров в корзине.
+private priceElement: HTMLElement - Отображает общую стоимость.
+private buttonElement: HTMLButtonElement - Кнопка оформления заказа.
+
+Методы
+
+set items(value: HTMLElement[]): void - Отображает карточки товаров в корзине.
+set total(value: number): void - Устанавливает общую стоимость товаров.
+set buttonDisabled(value: boolean): void - Блокирует кнопку оформления заказа.
+
+
+#### Класс Modal
+
+Отвечает за отображение модального окна.
+
+Конструктор принимает HTMLElement и IModalActions.
+
+Поля
+
+private contentElement: HTMLElement - Содержимое модального окна.
+private closeButton: HTMLButtonElement - Кнопка закрытия модального окна.
+
+Методы
+
+set content(value: HTMLElement): void - Устанавливает содержимое модального окна.
+open(): void - Открывает модальное окно.
+close(): void - Закрывает модальное окно.
+
+
+#### Класс Form
+
+Базовый класс для форм. Управляет состоянием кнопки отправки и отображением ошибок.
+
+Конструктор принимает HTMLFormElement.
+
+Поля
+
+protected submitButton: HTMLButtonElement - Кнопка отправки формы.
+protected errorsElement: HTMLElement - Поле отображения ошибок.
+
+Методы
+
+set valid(value: boolean): void - Активирует или блокирует кнопку отправки формы.
+set errors(value: string): void - Устанавливает текст ошибок.
+
+
+#### Класс OrderForm
+
+Отображает форму выбора способа оплаты и ввода адреса доставки. Наследуется от Form.
+
+Конструктор принимает HTMLFormElement и IOrderFormActions.
+
+Поля
+
+private paymentButtons: HTMLButtonElement[] - Кнопки выбора способа оплаты.
+private addressInput: HTMLInputElement - Поле ввода адреса.
+
+Методы
+
+set payment(value: TPayment | null): void - Отмечает выбранный способ оплаты.
+set address(value: string): void - Устанавливает адрес.
+
+
+#### Класс ContactsForm
+
+Отображает форму ввода электронной почты и телефона. Наследуется от Form.
+
+Конструктор принимает HTMLFormElement и IContactsFormActions.
+
+Поля
+
+private emailInput: HTMLInputElement - Поле электронной почты.
+private phoneInput: HTMLInputElement - Поле телефона.
+
+Методы
+
+set email(value: string): void - Устанавливает электронную почту.
+set phone(value: string): void - Устанавливает телефон.
+
+
+#### Класс Success
+
+Отображает сообщение об успешном оформлении заказа и итоговую сумму.
+
+Конструктор принимает HTMLElement и ISuccessActions.
+
+Поля
+
+private descriptionElement: HTMLElement - Отображает итоговую сумму.
+private closeButton: HTMLButtonElement - Кнопка закрытия.
+
+Методы
+
+set total(value: number): void - Выводит итоговую сумму заказа.
+
+
+### События
+
+products:changed - Изменение каталога товаров.
+product:selected - Выбор товара для подробного просмотра.
+basket:changed - Изменение содержимого корзины.
+buyer:changed - Изменение данных покупателя.
+
+card:select - Выбор карточки товара в каталоге.
+product:toggle - Добавление товара в корзину или удаление товара из корзины из окна просмотра.
+basket:remove - Удаление товара из корзины.
+basket:open - Открытие корзины.
+order:open - Открытие формы оформления заказа.
+order:submit - Переход к форме контактных данных.
+form:change - Изменение данных в формах.
+contacts:submit - Отправка заказа на сервер.
+modal:close - Закрытие модального окна.
+success:close - Закрытие окна успешного заказа.
